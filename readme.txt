@@ -7,7 +7,7 @@ oraz zaimportować bazę z pliku baza.sql i wpisać jej dane do funkcji connect 
 
 
 
-Po załadowaniu localhost/rent2 ukaże się powyższa strona.
+Po wypakowaniu w c/xampp/htdocs i wpisaniu w przeglądarkę localhost/rent2 ukaże się powyższa strona.
 Pierwsze zarejestrowane konto staję się administratorem, mającym sposobność nadawania uprawnień później zrobionym kontom.
 Następnie utworzone konta domyślnie będą kontem klienta. Aplikacja posiada system rozpoznawania rodzajów kont oparty na sesji.
 Użytkownik nie może wejść do panelu administratora i na odwrót.
