@@ -8,21 +8,52 @@ error_reporting(0);
 
 //=============== połączenie z bazą danych ==============
 
-class db
-{
+class DBObserver implements Observer {
+    private $subject;
 
-    public function connect()
-    {
+    public function __construct(Subject $subject) {
+        $this->subject = $subject;
+        $this->subject->attach($this);
+    }
 
-        $connect = pg_connect( "host=localhost dbname=check user=postgres password=kbkdh346"  );
-        if(!$connect){
-            echo  'Błąd połączenia z bazą';
-            exit();
+    public function update(Subject $subject) {
+        // Do something when the database changes
+        $query = $subject->getQuery();
+        $affected_table = $this->getAffectedTable($query);
+        if ($affected_table === 'filmy') {
+            $db = new db();
+            $db->showPopup('A new film has been added!');
         }
+    }
 
-        return $connect;
+    public function unsubscribe() {
+        $this->subject->detach($this);
+    }
+
+    private function getAffectedTable($query) {
+        preg_match('/UPDATE\s+(\w+)/i', $query, $matches);
+        if (count($matches) > 1) {
+            return $matches[1];
+        }
+        return null;
     }
 }
+
+class db {
+    public function connect() {
+        $connect = pg_connect("host=localhost dbname=check user=postgres password=kbkdh346");
+        if (!$connect) {
+            echo 'Błąd połączenia z bazą';
+            exit();
+        }
+        return $connect;
+    }
+
+    public function showPopup($message) {
+        echo "<script>alert('$message');</script>";
+    }
+}
+
 
 
 
