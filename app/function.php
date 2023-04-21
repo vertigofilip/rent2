@@ -8,21 +8,40 @@ error_reporting(0);
 
 //=============== połączenie z bazą danych ==============
 
-class db
-{
+class DBObserver implements Observer {
+    private $subject;
 
-    public function connect()
-    {
+    public function __construct(Subject $subject) {
+        $this->subject = $subject;
+        $this->subject->attach($this);
+    }
 
-        $connect = pg_connect( "host=localhost dbname=check user=postgres password=kbkdh346"  );
-        if(!$connect){
-            echo  'Błąd połączenia z bazą';
-            exit();
-        }
+    public function update(Subject $subject) {
+        // Do something when the database changes
+        $db = new db();
+        $db->showPopup('A new film has been added!');
+    }
 
-        return $connect;
+    public function unsubscribe() {
+        $this->subject->detach($this);
     }
 }
+
+class db {
+    public function connect() {
+        $connect = pg_connect("host=localhost dbname=check user=postgres password=kbkdh346");
+        if (!$connect) {
+            echo 'Błąd połączenia z bazą';
+            exit();
+        }
+        return $connect;
+    }
+
+    public function showPopup($message) {
+        echo "<script>alert('$message');</script>";
+    }
+}
+
 
 
 
